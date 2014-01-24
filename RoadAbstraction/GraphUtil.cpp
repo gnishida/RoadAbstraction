@@ -1541,7 +1541,7 @@ void GraphUtil::extractMajorRoads(RoadGraph& roads, float threshold) {
 
 				RoadVertexDesc next_v;
 				RoadEdgeDesc next_e;
-				if (!goStraightRoad(roads, v, *ei, 0.1f, next_v, next_e)) break;
+				if (!goStraightRoad(roads, v, e, 0.1f, next_v, next_e, edges)) break;
 
 				v = next_v;
 				e = next_e;
@@ -1565,7 +1565,7 @@ void GraphUtil::extractMajorRoads(RoadGraph& roads, float threshold) {
 	}
 }
 
-bool GraphUtil::goStraightRoad(RoadGraph& roads, RoadVertexDesc v, RoadEdgeDesc e, float threshold, RoadVertexDesc& next_v, RoadEdgeDesc& next_e) {
+bool GraphUtil::goStraightRoad(RoadGraph& roads, RoadVertexDesc v, RoadEdgeDesc e, float threshold, RoadVertexDesc& next_v, RoadEdgeDesc& next_e, QList<RoadEdgeDesc>& edges) {
 	next_v = boost::target(e, roads.graph);
 
 	QVector2D baseDir;
@@ -1597,6 +1597,8 @@ bool GraphUtil::goStraightRoad(RoadGraph& roads, RoadVertexDesc v, RoadEdgeDesc 
 			next_e = *ei;
 		}
 	}
+
+	if (edges.contains(next_e)) return false;
 
 	if (min_angle <= threshold) return true;
 	else return false;
